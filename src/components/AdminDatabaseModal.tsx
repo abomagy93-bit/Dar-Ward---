@@ -22,6 +22,9 @@ import {
   MapPin,
   ExternalLink,
   Video,
+  Copy,
+  FileCode,
+  Check,
 } from 'lucide-react';
 
 export const AdminDatabaseModal: React.FC = () => {
@@ -47,6 +50,8 @@ export const AdminDatabaseModal: React.FC = () => {
   const [unitPendingDelete, setUnitPendingDelete] = useState<Unit | null>(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const [successToast, setSuccessToast] = useState<string | null>(null);
+  const [jsonInputText, setJsonInputText] = useState('');
+  const [isCopiedJson, setIsCopiedJson] = useState(false);
 
   // Settings form state
   const [coverUrlInput, setCoverUrlInput] = useState(settings.coverImageUrl);
@@ -155,6 +160,62 @@ export const AdminDatabaseModal: React.FC = () => {
     a.download = `dar-ward-database-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     showToast('تم تصدير ملف النسخة الاحتياطية بنجاح!');
+  };
+
+  const handleCopyJson = () => {
+    const data = {
+      units,
+      settings,
+      exportDate: new Date().toISOString(),
+    };
+    const serialized = JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(serialized).then(() => {
+      setIsCopiedJson(true);
+      setTimeout(() => setIsCopiedJson(false), 2500);
+      showToast('✓ تم نسخ كود قاعدة البيانات JSON بالكامل إلى الحافظة!');
+    }).catch(() => {
+      prompt('كود قاعدة البيانات JSON:', serialized);
+    });
+  };
+
+  const handlePasteApplyJson = () => {
+    if (!jsonInputText || !jsonInputText.trim()) {
+      alert('يرجى لصق نص كود JSON أولاً.');
+      return;
+    }
+    try {
+      const parsed = JSON.parse(jsonInputText.trim());
+      let countUnits = 0;
+      if (parsed.units && Array.isArray(parsed.units)) {
+        parsed.units.forEach((u: Unit) => {
+          updateUnit(u);
+          countUnits++;
+        });
+      }
+      if (parsed.settings) {
+        updateSettings(parsed.settings);
+      }
+      setJsonInputText('');
+      showToast(`تم استيراد وتطبيق ${countUnits} وحدات وإعدادات الموقع بنجاح!`);
+    } catch (e) {
+      alert('نص JSON غير صالح. يرجى التأكد من صحة التنسيق.');
+    }
+  };
+
+  const handleDownloadTypeScriptCode = () => {
+    const tsCode = `import { Unit, SiteSettings } from '../types';
+
+export const INITIAL_SETTINGS: SiteSettings = ${JSON.stringify(settings, null, 2)};
+
+export const INITIAL_UNITS: Unit[] = ${JSON.stringify(units, null, 2)};
+`;
+    const blob = new Blob([tsCode], { type: 'text/typescript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'initialData.ts';
+    a.click();
+    showToast('تم إنشاء وتنزيل ملف initialData.ts الأساسي الجاهز لـ Netlify!');
   };
 
   const handleImportData = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -700,7 +761,7 @@ export const AdminDatabaseModal: React.FC = () => {
 
             {/* Tab 3: Backup & Persistence (Guaranteed to not lose data) */}
             {activeTab === 'backup' && (
-              <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6 text-center max-w-lg mx-auto">
+              <div className="p-6 max-h-[70vh] overflow-y-auto space-y-6 text-center max-w-2xl mx-auto">
                 <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-300 text-right">
                   <div className="flex items-center gap-2 font-bold text-emerald-900 text-sm mb-1">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600" />
@@ -711,8 +772,66 @@ export const AdminDatabaseModal: React.FC = () => {
                   </p>
                 </div>
 
+                {/* Netlify / Baseline File Export */}
+                <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50/40 border-2 border-amber-300/80 text-right">
+                  <div className="flex items-center gap-2 font-bold text-amber-900 text-base mb-2">
+                    <FileCode className="w-5 h-5 text-[#881337]" />
+                    <span>تحديث ونقل البيانات إلى Netlify (بيانات الموقع الأساسية)</span>
+                  </div>
+                  <p className="text-xs text-amber-900/80 leading-relaxed mb-4">
+                    لتثبيت كافة التعديلات التي قمت بها في الكود المصدري الدائم للموقع ليظهر لجميع زوار Netlify فوراً:
+                  </p>
+
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={handleDownloadTypeScriptCode}
+                      className="px-5 py-3 rounded-xl bg-[#881337] hover:bg-[#9f1239] text-white text-xs font-bold transition-all shadow-md flex items-center gap-2"
+                    >
+                      <Download className="w-4 h-4 text-[#fde047]" />
+                      <span>تنزيل ملف initialData.ts الأساسي لـ Netlify</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleCopyJson}
+                      className="px-5 py-3 rounded-xl bg-white hover:bg-amber-100 text-stone-800 border border-amber-300 text-xs font-bold transition-all shadow-sm flex items-center gap-2"
+                    >
+                      {isCopiedJson ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4 text-amber-700" />}
+                      <span>{isCopiedJson ? 'تم نسخ كود JSON' : 'نسخ كود البيانات بالكامل (JSON)'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Fast JSON Paste & Apply */}
+                <div className="p-6 rounded-2xl bg-[#faf7f4] border border-rose-200 text-right">
+                  <h4 className="font-bold text-base text-[#881337] mb-1">لصق واستيراد بيانات سريعة (JSON)</h4>
+                  <p className="text-xs text-gray-500 mb-3">
+                    إذا كان لديك نص كود JSON للوحدات أو الإعدادات، الصقه هنا لتطبيقه وحفظه فوراً في الموقع:
+                  </p>
+                  <textarea
+                    rows={4}
+                    value={jsonInputText}
+                    onChange={(e) => setJsonInputText(e.target.value)}
+                    placeholder='{"units": [...], "settings": {...}}'
+                    className="w-full p-3 rounded-xl border border-gray-300 text-xs font-mono text-left direction-ltr mb-3 focus:border-[#9f1239] outline-none"
+                    dir="ltr"
+                  />
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handlePasteApplyJson}
+                      className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white font-bold text-xs shadow transition-all flex items-center gap-2"
+                    >
+                      <Save className="w-4 h-4" />
+                      <span>تطبيق وحفظ البيانات في الموقع</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* File Backup & Restore */}
                 <div className="p-6 rounded-2xl bg-[#faf7f4] border border-rose-200">
-                  <h4 className="font-bold text-base text-[#881337] mb-2">تصدير واستيراد نسخة احتياطية</h4>
+                  <h4 className="font-bold text-base text-[#881337] mb-2">تصدير واستيراد ملف نسخة احتياطية</h4>
                   <p className="text-xs text-gray-500 mb-4">
                     يمكنك تنزيل ملف نسخة احتياطية كامل من قاعدة البيانات أو استرجاعه في أي وقت وعلى أي جهاز.
                   </p>
@@ -722,7 +841,7 @@ export const AdminDatabaseModal: React.FC = () => {
                       className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white border border-rose-300 text-[#881337] hover:bg-rose-50 text-xs font-bold transition-colors flex items-center justify-center gap-2"
                     >
                       <Download className="w-4 h-4" />
-                      <span>تصدير نسخة احتياطية (JSON)</span>
+                      <span>تصدير ملف نسخة احتياطية (JSON)</span>
                     </button>
 
                     <label className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 text-xs font-bold transition-colors flex items-center justify-center gap-2 cursor-pointer">

@@ -12,7 +12,6 @@ import { BookingPlatforms } from './components/BookingPlatforms';
 import { LocationSection } from './components/LocationSection';
 import { VisitorCounter } from './components/VisitorCounter';
 import { WhatsAppContact, FloatingWhatsAppWidget } from './components/WhatsAppContact';
-import { VideoShowcase } from './components/VideoShowcase';
 import { VideoModal } from './components/VideoModal';
 import { Footer } from './components/Footer';
 import { UnitDetailPage } from './components/UnitDetailPage';
@@ -46,9 +45,6 @@ const HospitalityApp: React.FC = () => {
 
             {/* Units Showcase, Filter by Category, and Availability Status */}
             <SearchAndUnits />
-
-            {/* In-Site Video Tour Showcase */}
-            <VideoShowcase />
 
             {/* Booking.com and Airbnb External Booking Badges */}
             <BookingPlatforms />
