@@ -25,6 +25,28 @@ body {
   height: 8px;
 }
 
+/* Hide Netlify Badge & Injected Banners */
+[data-netlify-badge],
+.netlify-badge,
+#netlify-badge,
+[id*="netlify-badge"],
+[class*="netlify-badge"],
+iframe[src*="netlify"],
+div[id*="netlify-badge"],
+div[class*="netlify-drawer"],
+a[href*="netlify.com"][style*="fixed"],
+a[href*="netlify.com"][style*="absolute"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+}
+
 ::-webkit-scrollbar-track {
   background: #fdfbf7;
 }

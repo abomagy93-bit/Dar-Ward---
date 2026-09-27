@@ -45,8 +45,17 @@ function generateUnitHtml(unit) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${unit.title} | دار ورد للضيافة بالمدينة المنورة</title>
     
-    <!-- Google Search Console Verification -->
+    <!-- Google Search Console Verification & Snippet Thumbnails -->
     <meta name="google-site-verification" content="5IbLD2xrJIS1Wv_5TGo4jtJIH8iQCBVWM4DVKY4Sbko" />
+    <meta name="thumbnail" content="${primaryImg}" />
+    <meta name="googlebot-image" content="index, follow" />
+
+    <!-- Google Search Snippet Favicons -->
+    <link rel="icon" type="image/png" sizes="48x48" href="${primaryImg}" />
+    <link rel="icon" type="image/png" sizes="96x96" href="${primaryImg}" />
+    <link rel="icon" type="image/png" sizes="192x192" href="${primaryImg}" />
+    <link rel="shortcut icon" href="${primaryImg}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="${primaryImg}" />
 
     <!-- Meta & SEO Tags -->
     <meta name="description" content="${unitSubtitle} - ${unit.description.slice(0, 140)}..." />
@@ -106,6 +115,10 @@ function generateUnitHtml(unit) {
     <style>
       body { font-family: 'Cairo', sans-serif; }
       .font-amiri { font-family: 'Amiri', serif; }
+      /* Prevent Netlify Badge / Banner Rendering */
+      [data-netlify-badge], .netlify-badge, #netlify-badge, [id*="netlify-badge"], [class*="netlify-badge"], iframe[src*="netlify"], div[class*="netlify-drawer"], a[href*="netlify.com"][style*="fixed"] {
+        display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; height: 0 !important; width: 0 !important; position: absolute !important; top: -9999px !important;
+      }
     </style>
   </head>
   <body class="bg-[#faf7f4] text-[#2c1810] selection:bg-[#9f1239] selection:text-white antialiased">
