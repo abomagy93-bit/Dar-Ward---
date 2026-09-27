@@ -115,11 +115,49 @@ function generateUnitHtml(unit) {
     <style>
       body { font-family: 'Cairo', sans-serif; }
       .font-amiri { font-family: 'Amiri', serif; }
-      /* Prevent Netlify Badge / Banner Rendering */
-      [data-netlify-badge], .netlify-badge, #netlify-badge, [id*="netlify-badge"], [class*="netlify-badge"], iframe[src*="netlify"], div[class*="netlify-drawer"], a[href*="netlify.com"][style*="fixed"] {
-        display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; height: 0 !important; width: 0 !important; position: absolute !important; top: -9999px !important;
+      /* Prevent Netlify Badge / Banner / Drawer Rendering */
+      [data-netlify-badge], .netlify-badge, #netlify-badge, [id*="netlify"], [class*="netlify"], iframe[src*="netlify"], div[class*="netlify"], #netlify-feedback-drawer, .netlify-feedback-drawer, a[href*="netlify.com"] {
+        display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; height: 0 !important; width: 0 !important; position: absolute !important; top: -9999px !important; left: -9999px !important; clip: rect(0, 0, 0, 0) !important;
       }
     </style>
+    <script>
+      (function() {
+        function removeNetlifyElements() {
+          try {
+            var netlifyEls = document.querySelectorAll(
+              '[data-netlify-badge], .netlify-badge, #netlify-badge, [id*="netlify"], [class*="netlify"], iframe[src*="netlify"], a[href*="netlify.com"], #netlify-feedback-drawer, .netlify-feedback-drawer'
+            );
+            netlifyEls.forEach(function(el) {
+              if (el && el.parentNode) {
+                el.parentNode.removeChild(el);
+              }
+            });
+            var allElements = document.querySelectorAll('div, span, a, p, iframe, footer');
+            allElements.forEach(function(el) {
+              if (el.children.length === 0 && el.textContent && el.textContent.toLowerCase().includes('powered by netlify')) {
+                if (el.parentNode) el.parentNode.removeChild(el);
+              }
+            });
+          } catch(e) {}
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', removeNetlifyElements);
+        } else {
+          removeNetlifyElements();
+        }
+
+        if (typeof MutationObserver !== 'undefined') {
+          var observer = new MutationObserver(function() {
+            removeNetlifyElements();
+          });
+          observer.observe(document.documentElement, {
+            childList: true,
+            subtree: true
+          });
+        }
+      })();
+    </script>
   </head>
   <body class="bg-[#faf7f4] text-[#2c1810] selection:bg-[#9f1239] selection:text-white antialiased">
     <!-- Header Navigation -->
