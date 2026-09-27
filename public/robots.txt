@@ -1,0 +1,31 @@
+# Robots.txt for Dar Ward Hospitality - دار ورد للضيافة
+# Website: https://darward.com
+
+User-agent: *
+Allow: /
+Disallow: /#admin
+
+# Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+# Sitemaps
+Sitemap: https://darward.com/sitemap.xml

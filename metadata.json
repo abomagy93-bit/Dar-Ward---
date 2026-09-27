@@ -1,0 +1,6 @@
+{
+  "name": "دار ورد للضيافة | Dar Ward Hospitality",
+  "description": "وحدات سكنية مفروشة بالمدينة المنورة - إيجار يومي وشهري وسنوي. صُممت بعناية لتمنحكم أقصى درجات السكينة والرفاهية بالقرب من المسجد النبوي الشريف، مع أحدث أنظمة الدخول الذكي والخدمات المتكاملة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
