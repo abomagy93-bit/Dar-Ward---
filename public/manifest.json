@@ -1,22 +1,22 @@
 {
-  "short_name": "Dar Ward",
-  "name": "دار ورد للضيافة - Dar Ward Hospitality",
-  "description": "شقق وفلل فندقية فاخرة بالمدينة المنورة بالقرب من المسجد النبوي الشريف مع حجز مباشر وسريع.",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#faf7f4",
-  "theme_color": "#881337",
+  "short_name": "دار ورد",
+  "name": "دار ورد للضيافة - المدينة المنورة",
   "icons": [
     {
-      "src": "/rose-icon.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "https://i.postimg.cc/HW9TjbXZ/file-00000000745482089954733c42f52076.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "/rose-icon-512.png",
-      "type": "image/png",
-      "sizes": "512x512"
+      "src": "https://i.postimg.cc/HW9TjbXZ/file-00000000745482089954733c42f52076.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  ]
+  ],
+  "start_url": "/",
+  "background_color": "#faf7f4",
+  "theme_color": "#881337",
+  "display": "standalone",
+  "dir": "rtl",
+  "lang": "ar"
 }

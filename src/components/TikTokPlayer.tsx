@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { getTikTokEmbedUrl, extractTikTokVideoId } from '../utils/tiktok';
-import { useHospitality } from '../context/HospitalityContext';
-import { Play, Maximize2, Sparkles, Video } from 'lucide-react';
+import React from 'react';
+import { ExternalLink, Sparkles, Video } from 'lucide-react';
 
 interface TikTokPlayerProps {
   videoUrl?: string;
@@ -10,23 +8,11 @@ interface TikTokPlayerProps {
 }
 
 export const TikTokPlayer: React.FC<TikTokPlayerProps> = ({ videoUrl, unitTitle, className = '' }) => {
-  const { openVideoModal } = useHospitality();
-  const [isPlaying, setIsPlaying] = useState(false);
-
   if (!videoUrl || !videoUrl.trim()) {
     return null;
   }
 
-  const embedUrl = getTikTokEmbedUrl(videoUrl);
-  const videoId = extractTikTokVideoId(videoUrl);
-
-  const handleOpenInModal = () => {
-    openVideoModal(
-      videoUrl,
-      unitTitle ? `جولة فيديو: ${unitTitle}` : 'فيديو الوحدة الفندقية',
-      'مشاهدة مدمجة داخل موقع دار ورد للضيافة'
-    );
-  };
+  const cleanUrl = videoUrl.trim();
 
   return (
     <div className={`bg-gradient-to-br from-[#1c0810] via-[#12040a] to-black text-white rounded-3xl p-6 sm:p-8 shadow-2xl border-2 border-rose-900/50 relative overflow-hidden ${className}`}>
@@ -45,94 +31,46 @@ export const TikTokPlayer: React.FC<TikTokPlayerProps> = ({ videoUrl, unitTitle,
           <div>
             <h3 className="font-['Amiri',serif] text-xl sm:text-2xl font-bold text-white flex items-center gap-2">
               <span>جولة مرئية وفيديو للوحدة</span>
-              <span className="text-xs font-sans px-2.5 py-0.5 rounded-full bg-rose-950/80 text-rose-300 border border-rose-800/60">
-                مشغل داخلي
+              <span className="text-xs font-sans px-2.5 py-0.5 rounded-full bg-black text-[#25F4EE] border border-[#25F4EE]/40 flex items-center gap-1 font-bold">
+                <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.5 6.3 6.3 0 0 0 1.95-4.57V8.58a8.31 8.31 0 0 0 5-1.89z" />
+                </svg>
+                <span>TikTok</span>
               </span>
             </h3>
             <p className="text-xs text-rose-200/80 mt-0.5">
-              شاهد التفاصيل الحية والأجواء الفاخرة للوحدة مباشرة داخل الموقع
+              شاهد التفاصيل الحية والأجواء الفاخرة للوحدة عبر حساب دار ورد على تيك توك
             </p>
           </div>
         </div>
-
-        {/* Open in full in-site window button */}
-        <button
-          type="button"
-          onClick={handleOpenInModal}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-rose-600/30 text-white text-xs font-bold transition-all border border-rose-300/30 backdrop-blur-sm group active:scale-95 shadow-sm"
-        >
-          <Maximize2 className="w-3.5 h-3.5 text-[#fde047]" />
-          <span>تكبير الفيديو في نافذة داخلية</span>
-        </button>
       </div>
 
-      {/* Video Container */}
-      <div className="relative z-10 flex flex-col items-center justify-center">
-        {embedUrl ? (
-          <div className="w-full max-w-[380px] h-[580px] sm:h-[640px] rounded-2xl overflow-hidden bg-black shadow-2xl border-2 border-rose-950/60 relative">
-            {!isPlaying ? (
-              <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-b from-[#240813] to-black relative">
-                <div
-                  className="w-20 h-20 rounded-full bg-gradient-to-r from-[#e11d48] to-[#be123c] p-[2px] mb-4 shadow-xl group hover:scale-110 transition-transform cursor-pointer"
-                  onClick={() => setIsPlaying(true)}
-                >
-                  <div className="w-full h-full bg-black/80 rounded-full flex items-center justify-center">
-                    <Play className="w-8 h-8 text-white fill-white translate-x-[-2px]" />
-                  </div>
-                </div>
-                <h4 className="font-bold text-base text-white mb-1 font-['Amiri',serif]">
-                  {unitTitle || 'فيديو الوحدة الفندقية'}
-                </h4>
-                <p className="text-xs text-rose-200/70 mb-6 max-w-xs">
-                  اضغط للتشغيل الفوري هنا أو افتح الفيديو في نافذة العرض المدمجة
-                </p>
-                <div className="flex flex-col sm:flex-row gap-2 w-full max-w-xs">
-                  <button
-                    type="button"
-                    onClick={() => setIsPlaying(true)}
-                    className="flex-1 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#9f1239] to-[#be123c] text-white text-xs font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 border border-[#d4af37]/40"
-                  >
-                    <Play className="w-3.5 h-3.5 fill-white" />
-                    <span>تشغيل في الصفحة</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleOpenInModal}
-                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all flex items-center justify-center gap-1.5 border border-white/20 active:scale-95"
-                  >
-                    <Maximize2 className="w-3.5 h-3.5" />
-                    <span>نافذة كاملة</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <iframe
-                src={embedUrl}
-                title={unitTitle || 'Unit Video'}
-                className="w-full h-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
-            )}
-          </div>
-        ) : (
-          /* Fallback if non-embed format, still opens in-site modal */
-          <div className="w-full max-w-md p-8 rounded-2xl bg-stone-900/90 border border-stone-800 text-center">
-            <Video className="w-12 h-12 text-[#be123c] mx-auto mb-3" />
-            <h4 className="font-bold text-white text-base mb-2 font-['Amiri',serif]">فيديو الوحدة المتاح</h4>
-            <p className="text-xs text-stone-300 mb-6 leading-relaxed">
-              شاهد التفاصيل الحية والأجواء الفندقية الخاصة بهذه الوحدة مباشرة:
-            </p>
-            <button
-              type="button"
-              onClick={handleOpenInModal}
-              className="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-xl bg-gradient-to-r from-[#881337] to-[#be123c] text-white text-xs font-bold shadow-xl hover:brightness-110 transition-all border border-[#d4af37]/50"
-            >
-              <Play className="w-4 h-4 fill-white" />
-              <span>مشاهدة الفيديو داخل الموقع</span>
-            </button>
-          </div>
-        )}
+      {/* Direct Browser Link Card */}
+      <div className="relative z-10 max-w-xl mx-auto text-center py-6 px-4 sm:px-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#9f1239] via-[#be123c] to-[#e11d48] flex items-center justify-center mx-auto mb-4 shadow-xl border-2 border-[#d4af37]/60 animate-pulse">
+          <Video className="w-8 h-8 text-white" />
+        </div>
+
+        <h4 className="font-['Amiri',serif] text-xl font-bold text-white mb-2">
+          {unitTitle ? `فيديو: ${unitTitle}` : 'فيديو وجولة الوحدة'}
+        </h4>
+
+        <p className="text-xs text-rose-200/80 mb-6 max-w-md mx-auto leading-relaxed">
+          انقر أدناه لفتح وتشغيل الفيديو مباشرة في متصفح الويب بدقة عالية:
+        </p>
+
+        <a
+          href={cleanUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-[#9f1239] via-[#be123c] to-[#e11d48] hover:from-[#881337] hover:to-[#be123c] text-white font-bold text-sm shadow-xl hover:shadow-2xl transition-all duration-300 border border-[#d4af37]/60 active:scale-95 group"
+        >
+          <svg className="w-5 h-5 fill-current text-white group-hover:text-[#25F4EE] transition-colors" viewBox="0 0 24 24">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.5 6.3 6.3 0 0 0 1.95-4.57V8.58a8.31 8.31 0 0 0 5-1.89z" />
+          </svg>
+          <span>مشاهدة الفيديو على تيك توك (في المتصفح)</span>
+          <ExternalLink className="w-4 h-4 text-[#fde047] group-hover:translate-x-[-2px] transition-transform" />
+        </a>
       </div>
     </div>
   );

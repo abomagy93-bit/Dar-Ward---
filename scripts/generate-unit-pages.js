@@ -45,6 +45,9 @@ function generateUnitHtml(unit) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${unit.title} | دار ورد للضيافة بالمدينة المنورة</title>
     
+    <!-- Google Search Console Verification -->
+    <meta name="google-site-verification" content="5IbLD2xrJIS1Wv_5TGo4jtJIH8iQCBVWM4DVKY4Sbko" />
+
     <!-- Meta & SEO Tags -->
     <meta name="description" content="${unitSubtitle} - ${unit.description.slice(0, 140)}..." />
     <meta name="keywords" content="${unit.title}, دار ورد للضيافة, شقق مفروشة المدينة المنورة, حجز شقق المدينة, Dar Ward Hospitality Unit ${unit.unitNumber}" />
@@ -168,8 +171,7 @@ function generateUnitHtml(unit) {
               <span>•</span>
               <span>${unit.floor || 'دار ورد'}</span>
             </div>
-            <h1 class="font-amiri text-3xl sm:text-4xl font-bold text-[#881337] mb-2">${unit.title}</h1>
-            <p class="text-sm sm:text-base text-gray-600">${unitSubtitle}</p>
+            <h1 class="font-amiri text-3xl sm:text-4xl font-bold text-[#881337]">${unit.title}</h1>
           </div>
 
           <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -406,4 +408,36 @@ units.forEach((unit) => {
   console.log(`Generated: ${filePath}`);
 });
 
-console.log(`All ${units.length} unit HTML pages generated successfully!`);
+// Generate sitemap.xml
+const todayStr = new Date().toISOString().split('T')[0];
+const sitemapUrls = [
+  { url: 'https://darward.com/', priority: '1.0', changefreq: 'daily' },
+  ...units.map((unit) => ({
+    url: `https://darward.com/unit-${unit.unitNumber}.html`,
+    priority: '0.8',
+    changefreq: 'weekly',
+  })),
+];
+
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+                            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+${sitemapUrls
+  .map(
+    (item) => `  <url>
+    <loc>${item.url}</loc>
+    <lastmod>${todayStr}</lastmod>
+    <changefreq>${item.changefreq}</changefreq>
+    <priority>${item.priority}</priority>
+  </url>`
+  )
+  .join('\n')}
+</urlset>`;
+
+const sitemapPath = path.join(publicDir, 'sitemap.xml');
+fs.writeFileSync(sitemapPath, sitemapXml, 'utf8');
+console.log(`Generated Sitemap: ${sitemapPath}`);
+
+console.log(`All ${units.length} unit HTML pages and sitemap.xml generated successfully!`);

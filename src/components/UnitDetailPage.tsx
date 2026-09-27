@@ -257,22 +257,19 @@ const UnitDetailContent: React.FC<{ unit: Unit; onBack: () => void }> = ({ unit,
             </div>
 
             <div className="flex items-center gap-2">
-              {/* Watch Video Button in In-Site Modal */}
+              {/* Watch Video Button - Opens TikTok in Browser */}
               {unit.tiktokVideoUrl && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    openVideoModal(
-                      unit.tiktokVideoUrl!,
-                      `جولة فيديو: ${unit.title}`,
-                      'مشاهدة مدمجة داخل موقع دار ورد للضيافة'
-                    )
-                  }
+                <a
+                  href={unit.tiktokVideoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-[#9f1239] to-[#be123c] hover:from-[#881337] hover:to-[#9f1239] text-white text-xs font-bold transition-all active:scale-95 shadow-sm border border-[#d4af37]/40"
+                  title="مشاهدة فيديو الوحدة على تيك توك"
                 >
                   <Play className="w-3.5 h-3.5 fill-white" />
                   <span>{language === 'ar' ? 'فيديو الوحدة' : 'Unit Video'}</span>
-                </button>
+                  <ExternalLink className="w-3 h-3 text-rose-200" />
+                </a>
               )}
 
               {/* Prominent Share Button in Header */}
@@ -296,15 +293,9 @@ const UnitDetailContent: React.FC<{ unit: Unit; onBack: () => void }> = ({ unit,
             </div>
           </div>
 
-          <h1 className="font-['Amiri',serif] text-2xl sm:text-4xl font-bold text-[#881337] mb-2 leading-tight">
+          <h1 className="font-['Amiri',serif] text-2xl sm:text-4xl font-bold text-[#881337] mb-6 leading-tight">
             {unit.title}
           </h1>
-
-          {unit.subtitle && (
-            <p className="text-base text-[#78350f] font-medium mb-6">
-              {unit.subtitle}
-            </p>
-          )}
 
           {/* Key Specs Bar (NO AREA as requested: Guests, Bedrooms, Bathrooms, Floor/View) */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-[#fdfbf7] rounded-2xl border border-rose-100">
