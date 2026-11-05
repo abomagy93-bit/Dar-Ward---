@@ -7,13 +7,13 @@ export const INITIAL_SETTINGS: SiteSettings = {
   coverImageUrl: 'https://i.postimg.cc/fWPYgDny/file-00000000045482088e47a735dae421a9.png',
   youtubeUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
   whatsapp1: {
-    number: '+966509993010',
+    number: '+966544083859',
     label: 'واتساب الحجوزات والاستقبال',
     description: 'للحجز الفوري والاستعلام عن التوفر والأسعار',
     defaultMessage: 'السلام عليكم ورحمة الله، أود الاستفسار عن حجز في دار ورد للضيافة بالمدينة المنورة (Dar Ward).',
   },
   whatsapp2: {
-    number: '+966509993010',
+    number: '+966544083859',
     label: 'واتساب الإدارة وخدمة الضيوف',
     description: 'لخدمة النزلاء والطلبات الخاصة وخدمات كبار الشخصيات',
     defaultMessage: 'السلام عليكم، لدي استفسار خاص بإدارة دار ورد للضيافة (Dar Ward).',

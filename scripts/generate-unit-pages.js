@@ -27,7 +27,7 @@ try {
   console.error('Error parsing initialData.ts, using fallback', e);
 }
 
-const WHATSAPP_NUMBER = (settings?.whatsapp1?.number || '966509993010').replace(/\D/g, '');
+const WHATSAPP_NUMBER = (settings?.whatsapp1?.number || '966544083859').replace(/\D/g, '');
 const SITE_THUMBNAIL = settings?.coverImageUrl || 'https://i.postimg.cc/fWPYgDny/file-00000000045482088e47a735dae421a9.png';
 
 function generateUnitHtml(unit) {

@@ -655,7 +655,7 @@ export const INITIAL_UNITS: Unit[] = ${JSON.stringify(units, null, 2)};
                         value={wa1Number}
                         onChange={(e) => setWa1Number(e.target.value)}
                         className="w-full px-3 py-2 rounded-lg border border-gray-300 text-sm font-mono text-emerald-700"
-                        placeholder="+966501234567"
+                        placeholder="+966544083859"
                         dir="ltr"
                       />
                     </div>

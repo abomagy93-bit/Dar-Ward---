@@ -100,11 +100,21 @@ export const HospitalityProvider: React.FC<{ children: React.ReactNode }> = ({ c
             loc.googleMapsDirectUrl = INITIAL_SETTINGS.location.googleMapsDirectUrl;
             loc.googleMapsEmbedUrl = INITIAL_SETTINGS.location.googleMapsEmbedUrl;
           }
+          // Migrate old default phone number if present in saved settings
+          const wa1 = { ...INITIAL_SETTINGS.whatsapp1, ...(parsed.whatsapp1 || {}) };
+          const wa2 = { ...INITIAL_SETTINGS.whatsapp2, ...(parsed.whatsapp2 || {}) };
+          if (!wa1.number || wa1.number.includes('509993010') || wa1.number.includes('501234567')) {
+            wa1.number = INITIAL_SETTINGS.whatsapp1.number;
+          }
+          if (!wa2.number || wa2.number.includes('509993010') || wa2.number.includes('501234567')) {
+            wa2.number = INITIAL_SETTINGS.whatsapp2.number;
+          }
+
           return {
             ...INITIAL_SETTINGS,
             ...parsed,
-            whatsapp1: { ...INITIAL_SETTINGS.whatsapp1, ...(parsed.whatsapp1 || {}) },
-            whatsapp2: { ...INITIAL_SETTINGS.whatsapp2, ...(parsed.whatsapp2 || {}) },
+            whatsapp1: wa1,
+            whatsapp2: wa2,
             location: loc,
           };
         }
